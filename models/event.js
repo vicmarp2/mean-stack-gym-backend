@@ -7,4 +7,4 @@ const eventSchema = mongoose.Schema({
   dayOfWeek: { type: Number, required: true },
 });
 
-module.exports = mongoose.model("Event", eventSchema);
+module.exports = mongoose.model("Event", eventSchema, 'events');

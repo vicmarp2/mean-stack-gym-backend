@@ -14,7 +14,7 @@ const gymSchema = mongoose.Schema({
     latitude: { type: Number, required: true },
     longitude: { type: Number, required: true },
   },
-});
+  });
 
 gymSchema.plugin(uniqueValidator);
 
