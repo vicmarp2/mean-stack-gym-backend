@@ -6,8 +6,14 @@ const gymSchema = mongoose.Schema({
   name: { type: String, required: true },
   address: { type: String, required: true },
   contactNumber: { type: String, required: true },
-  openingHours: { type: mongoose.Schema.Types.ObjectId, ref: "OpeningHours", required: true },
-  coordinates: { type: mongoose.Schema.Types.ObjectId, ref: "Coordinates", required: true },
+  openingHours: {
+    mondayToFriday: { type: String, required: true },
+    weekend: { type: String, required: true },
+  },
+  coordinates: {
+    latitude: { type: Number, required: true },
+    longitude: { type: Number, required: true },
+  },
 });
 
 gymSchema.plugin(uniqueValidator);

@@ -11,18 +11,16 @@ const quotaRoutes = require("./routes/gyms");
 
 const app = express();
 
-mongoose
-  .connect(
-    "mongodb+srv://max:" +
-      process.env.MONGO_ATLAS_PW +
-      "@cluster0-ntrwp.mongodb.net/node-angular"
-  )
+const DATABASE = 'mean-stack-gym';
+const DB_URL = `mongodb://localhost:27017/${DATABASE}`;
+
+mongoose.connect(DB_URL, { useNewUrlParser: true, useCreateIndex: true})
   .then(() => {
-    console.log("Connected to database!");
-  })
-  .catch(() => {
-    console.log("Connection failed!");
-  });
+      console.log("Connected to database!");
+    })
+    .catch(() => {
+      console.log("Connection failed!");
+    });
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -41,10 +39,10 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/api/user", userRoutes);
+// app.use("/api/user", userRoutes);
 app.use("/api/gyms", gymRoutes);
-app.use("/api/activities", activityRoutes);
-app.use("/api/courses", courseRoutes);
-app.use("/api/quotas", quotaRoutes);
+// app.use("/api/activities", activityRoutes);
+// app.use("/api/courses", courseRoutes);
+// app.use("/api/quotas", quotaRoutes);
 
 module.exports = app;

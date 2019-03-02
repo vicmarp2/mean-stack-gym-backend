@@ -1,0 +1,26 @@
+{
+  "name": "mean-stack-gym-backend",
+  "version": "1.0.0",
+  "description": "Mean Stack Gym Backend",
+  "main": "server.js",
+  "dependencies": {
+    "bcrypt": "^3.0.4",
+    "body-parser": "^1.18.3",
+    "core-js": "^2.6.5",
+    "express": "^4.16.4",
+    "jsonwebtoken": "^8.5.0",
+    "mongoose": "^5.4.16",
+    "mongoose-unique-validator": "^2.0.2",
+    "multer": "^1.4.1",
+    "nodemon": "^1.18.10",
+    "zone.js": "^0.8.29"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "start:server": "nodemon server.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
