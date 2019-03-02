@@ -42,7 +42,7 @@ app.use((req, res, next) => {
 // app.use("/api/user", userRoutes);
 app.use("/api/gyms", gymRoutes);
 // app.use("/api/activities", activityRoutes);
-// app.use("/api/courses", courseRoutes);
+app.use("/api/courses", courseRoutes);
 app.use("/api/quotas", quotaRoutes);
 
 module.exports = app;
