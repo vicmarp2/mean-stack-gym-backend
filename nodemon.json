@@ -1,0 +1,6 @@
+{
+  "env": {
+    "DATABASE": "mean-stack-gym",
+    "JWT_KEY": "secret_jwt_key"
+  }
+}

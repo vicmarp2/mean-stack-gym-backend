@@ -39,7 +39,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use("/api/user", userRoutes);
+app.use("/api/users", userRoutes);
 app.use("/api/gyms", gymRoutes);
 app.use("/api/activities", activityRoutes);
 app.use("/api/courses", courseRoutes);

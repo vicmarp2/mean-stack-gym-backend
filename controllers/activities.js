@@ -84,7 +84,6 @@ exports.getActivities = (req, res, next) => {
 }
 
 exports.getAllEvents = (req, res, next) => {
-  console.log("llego");
   const getQuery = Event.find();
   getQuery.then((events) => {
     res.status(200).json({
