@@ -16,6 +16,7 @@ const userSchema = mongoose.Schema({
   postalCode: { type: String, required: false },
   city: { type: String, required: false },
   iban: { type: String, required: false },
+  isAdmin: {type: Boolean, required: true },
 });
 
 userSchema.plugin(uniqueValidator);

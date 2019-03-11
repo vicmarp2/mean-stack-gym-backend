@@ -112,7 +112,8 @@ exports.createUser = (req, res, next) => {
       address: req.body.address,
       postalCode: req.body.postalCode,
       city: req.body.city,
-      iban: req.body.iban
+      iban: req.body.iban,
+      isAdmin: req.body.isAdmin,
     });
     user
       .save()
@@ -206,7 +207,8 @@ exports.userLogin = (req, res, next) => {
       res.status(200).json({
         token: token,
         expiresIn: 3600,
-        userId: fetchedUser._id
+        userId: fetchedUser._id,
+        userAdmin: fetchedUser.isAdmin,
       });
     })
     .catch(err => {
