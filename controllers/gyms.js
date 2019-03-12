@@ -114,3 +114,28 @@ exports.updateGym = (req, res, next) => {
     });
   });
 }
+
+exports.createGym = (req, res, next) => {
+  Gym.findOne({ codName: req.body.gym.codName }).then(gym => {
+    if (gym) {
+      return res.status(401).json({
+        message: "Gym ya existe"
+      });
+    }
+  });
+
+  const gym = new Gym({
+    ...req.body.gym
+  });
+  gym.save().then(result => {
+    res.status(201).json({
+      message: "Gym created!",
+      gym: result
+    });
+  })
+  .catch(err => {
+    res.status(500).json({
+      message: "Invalid authentication credentials!"
+    });
+  });
+}
