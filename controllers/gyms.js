@@ -74,3 +74,43 @@ exports.getGym = (req, res, next)  => {
     });
   });
 }
+
+exports.deleteGym = (req, res, next) => {
+  const id = req.params.id;
+  const deleteQuery = Gym.deleteOne({_id: id});
+  deleteQuery.then((result) => {
+    if (result.n > 0) {
+      res.status(200).json({
+        message: "Gym deleted successfully!",
+      });
+    } else {
+      res.status(401).json({ message: "Not authorized!" });
+    }
+  }).catch(error => {
+    res.status(500).json({
+      message: "Fetching Gym failed!"
+    });
+  });
+}
+
+exports.updateGym = (req, res, next) => {
+  const newGym = req.body.gym;
+  const gym = new Gym({
+    ...newGym,
+    _id: newGym.id,
+  })
+  const putQuery = Gym.updateOne({_id: gym._id}, gym);
+  putQuery.then((result) => {
+    if (result.n > 0) {
+      res.status(200).json({
+        message: "Gym updated successfully!",
+      });
+    } else {
+      res.status(401).json({ message: "Not authorized!" });
+    }
+  }).catch(error => {
+    res.status(500).json({
+      message: "Updating Gym failed!"
+    });
+  });
+}
