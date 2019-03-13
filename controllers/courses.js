@@ -36,3 +36,61 @@ exports.getCourses = (req, res, next) => {
     });
   });
 }
+
+exports.deleteCourse = (req, res, next) => {
+  const id = req.params.id;
+  const deleteQuery = Course.deleteOne({_id: id});
+  deleteQuery.then((result) => {
+    if (result.n > 0) {
+      res.status(200).json({
+        message: "Course deleted successfully!",
+      });
+    } else {
+      res.status(401).json({ message: "Not authorized!" });
+    }
+  }).catch(error => {
+    res.status(500).json({
+      message: "Fetching Course failed!"
+    });
+  });
+}
+
+exports.updateCourse = (req, res, next) => {
+  const newCourse = req.body.course;
+  const course = new Course({
+    ...newCourse,
+    _id: newCourse.id,
+  })
+  const putQuery = Course.updateOne({_id: course._id}, course);
+  putQuery.then((result) => {
+    if (result.n > 0) {
+      res.status(200).json({
+        message: "Course updated successfully!",
+      });
+    } else {
+      res.status(401).json({ message: "Not authorized!" });
+    }
+  }).catch(error => {
+    res.status(500).json({
+      message: "Updating Course failed!"
+    });
+  });
+}
+
+exports.createCourse = (req, res, next) => {
+
+  const course = new Course({
+    ...req.body.course
+  });
+  course.save().then(result => {
+    res.status(201).json({
+      message: "Course created!",
+      course: result
+    });
+  })
+  .catch(err => {
+    res.status(500).json({
+      message: "Invalid authentication credentials!"
+    });
+  });
+}
