@@ -19,5 +19,12 @@ activitySchema.pre('save', function(next){
       next();
   })
 });
+
+activitySchema.pre('delete', function(next){
+  eventSchema.deleteMany(this.events, function(err, res){
+      if(err) throw err;
+      next();
+  })
+});
 module.exports = mongoose.model("Activity", activitySchema);
 

@@ -20,6 +20,20 @@ exports.getUser = (req, res, next) => {
   });
 }
 
+exports.getUsers = (req, res, next) => {
+  const getQuery = User.find().populate('quota');
+  getQuery.then((users) => {
+    res.status(200).json({
+      message: "User fetched successfully!",
+      users,
+    });
+  }).catch(error => {
+    res.status(500).json({
+      message: "Fetching users failed!"
+    });
+  });
+}
+
 exports.deleteUser = (req, res, next) => {
   const userId = req.params.userId;
   const deleteQuery = User.deleteOne({_id: userId});
@@ -39,6 +53,16 @@ exports.deleteUser = (req, res, next) => {
 }
 
 exports.updateUser = (req, res, next) => {
+  if (req.body.emailChanged) {
+    User.findOne({ email: req.body.user.email }).then(user => {
+      if (user) {
+        res.status(401).json({
+          duplicated: true
+        });
+      } 
+    });
+  }
+
   const newUser = req.body.user;
   const user = new User({
     ...newUser,

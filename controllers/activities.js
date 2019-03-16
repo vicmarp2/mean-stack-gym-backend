@@ -118,3 +118,62 @@ exports.getAllEvents = (req, res, next) => {
   //     console.log(error);
   //   })
   // }) 
+
+
+  exports.deleteActivity = (req, res, next) => {
+    const id = req.params.id;
+    const deleteQuery = Activity.deleteOne({_id: id});
+    deleteQuery.then((result) => {
+      if (result.n > 0) {
+        res.status(200).json({
+          message: "Activity deleted successfully!",
+        });
+      } else {
+        res.status(401).json({ message: "Not authorized!" });
+      }
+    }).catch(error => {
+      res.status(500).json({
+        message: "Fetching Activity failed!"
+      });
+    });
+  }
+  
+  exports.updateActivity = (req, res, next) => {
+    const newActivity = req.body.activity;
+    const activity = new Activity({
+      ...newActivity,
+      _id: newActivity.id,
+    })
+    const putQuery = Activity.updateOne({_id: activity._id}, activity);
+    putQuery.then((result) => {
+      if (result.n > 0) {
+        res.status(200).json({
+          message: "Activity updated successfully!",
+        });
+      } else {
+        res.status(401).json({ message: "Not authorized!" });
+      }
+    }).catch(error => {
+      res.status(500).json({
+        message: "Updating Activity failed!"
+      });
+    });
+  }
+  
+  exports.createActivity = (req, res, next) => {
+  
+    const activity = new Activity({
+      ...req.body.activity
+    });
+    activity.save().then(result => {
+      res.status(201).json({
+        message: "Activity created!",
+        activity: result
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: "Invalid authentication credentials!"
+      });
+    });
+  }

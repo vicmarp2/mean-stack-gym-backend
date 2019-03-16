@@ -14,6 +14,8 @@ router.post("/duplicate", UserController.checkDuplicatedUser);
 
 router.post("/duplicate/dni", UserController.checkDuplicatedDNI);
 
+router.get("", UserController.getUsers);
+
 router.get("/user/:userId", UserController.getUser);
 
 router.delete("/user/:userId", UserController.deleteUser);
