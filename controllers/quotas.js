@@ -56,3 +56,62 @@ exports.getQuotas = (req, res, next) => {
     });
   });
 }
+
+
+exports.deleteQuota = (req, res, next) => {
+  const id = req.params.id;
+  const deleteQuery = Quota.deleteOne({_id: id});
+  deleteQuery.then((result) => {
+    if (result.n > 0) {
+      res.status(200).json({
+        message: "Quota deleted successfully!",
+      });
+    } else {
+      res.status(401).json({ message: "Not authorized!" });
+    }
+  }).catch(error => {
+    res.status(500).json({
+      message: "Fetching Quota failed!"
+    });
+  });
+}
+
+exports.updateQuota = (req, res, next) => {
+  const newQuota = req.body.quota;
+  const quota = new Quota({
+    ...newQuota,
+    _id: newQuota.id,
+  })
+  const putQuery = Quota.updateOne({_id: quota._id}, quota);
+  putQuery.then((result) => {
+    if (result.n > 0) {
+      res.status(200).json({
+        message: "Quota updated successfully!",
+      });
+    } else {
+      res.status(401).json({ message: "Not authorized!" });
+    }
+  }).catch(error => {
+    res.status(500).json({
+      message: "Updating Quota failed!"
+    });
+  });
+}
+
+exports.createQuota = (req, res, next) => {
+
+  const quota = new Quota({
+    ...req.body.quota
+  });
+  quota.save().then(result => {
+    res.status(201).json({
+      message: "Quota created!",
+      quota: result
+    });
+  })
+  .catch(err => {
+    res.status(500).json({
+      message: "Invalid authentication credentials!"
+    });
+  });
+}
