@@ -1,4 +1,5 @@
 const express = require("express");
+const checkAuth = require("../middleware/check-auth");
 
 const GymsController = require("../controllers/gyms");
 
@@ -8,10 +9,10 @@ router.get("", GymsController.getGyms);
 
 router.get("/:codName", GymsController.getGym);
 
-router.post("/create", GymsController.createGym);
+router.post("/create", checkAuth, GymsController.createGym);
 
-router.delete("/:id", GymsController.deleteGym);
+router.delete("/:id", checkAuth, GymsController.deleteGym);
 
-router.put("/edit", GymsController.updateGym);
+router.put("/edit", checkAuth, GymsController.updateGym);
 
 module.exports = router;

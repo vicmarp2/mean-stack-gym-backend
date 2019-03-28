@@ -122,12 +122,19 @@ exports.getAllEvents = (req, res, next) => {
 
   exports.deleteActivity = (req, res, next) => {
     const id = req.params.id;
+    let activity;
+    Activity.findOne({ _id: id}).then(activityRes => {
+      activity = activityRes;
+      console.log(activity.name);
+    })
     const deleteQuery = Activity.deleteOne({_id: id});
     deleteQuery.then((result) => {
       if (result.n > 0) {
-        res.status(200).json({
-          message: "Activity deleted successfully!",
-        });
+        Event.deleteMany({activityName: activity.name}).then(result => {
+          res.status(200).json({
+            message: "Activity deleted successfully!",
+          });
+        })
       } else {
         res.status(401).json({ message: "Not authorized!" });
       }
@@ -140,13 +147,18 @@ exports.getAllEvents = (req, res, next) => {
   
   exports.updateActivity = (req, res, next) => {
     const newActivity = req.body.activity;
+    let oldActivity;
     const activity = new Activity({
       ...newActivity,
       _id: newActivity.id,
     })
+    Activity.findOne({ _id: newActivity.id}).then(activityRes => {
+      oldActivity = activityRes;
+    })
     const putQuery = Activity.updateOne({_id: activity._id}, activity);
     putQuery.then((result) => {
       if (result.n > 0) {
+        Event.updateMany({activityName: oldActivity.name }, {$set: {activityName: newActivity.name}}).exec();
         res.status(200).json({
           message: "Activity updated successfully!",
         });
@@ -173,7 +185,80 @@ exports.getAllEvents = (req, res, next) => {
     })
     .catch(err => {
       res.status(500).json({
-        message: "Invalid authentication credentials!"
+        message: "Credenciales no válidos"
+      });
+    });
+  }
+
+//todo
+  exports.createEvent = (req, res, next) => {
+  
+    const event = new Event({
+      ...req.body.event
+    });
+    event.save().then(result => {
+      Activity.findOneAndUpdate({name: event.activityName}, {$push: {events: event}}).then(result => {
+      res.status(201).json({
+        message: "Event created!",
+        event: result
+      });
+    })
+  })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({
+        message: "Credenciales no válidos"
+      });
+    });
+  }
+
+  exports.updateEvent = (req, res, next) => {
+    const newEvent = req.body.event;
+    const event = new Event({
+      ...newEvent,
+      _id: newEvent.id,
+    })
+    const putQuery = Event.updateOne({_id: event._id}, event);
+    putQuery.then((result) => {
+      if (result.n > 0) {
+        res.status(200).json({
+          message: "Event updated successfully!",
+        });
+      } else {
+        res.status(401).json({ message: "Not authorized!" });
+      }
+    }).catch(error => {
+      res.status(500).json({
+        message: "Updating Event failed!"
+      });
+    });
+  }
+
+
+  exports.deleteEvent = (req, res, next) => {
+    const id = req.params.id;
+    let event;
+    Event.findOne({ _id: id}).then(eventRes => {
+      event = eventRes;
+      console.log(event._id);
+    })
+    const deleteQuery = Event.deleteOne({_id: id});
+    deleteQuery.then((result) => {
+      if (result.n > 0) {
+        console.log(event);
+        Activity.findOneAndUpdate({name: event.activityName}, {$pull: {events: event._id}}).then(result => {
+          console.log(result);
+        res.status(200).json({
+          message: "Event deleted successfully!",
+        });
+      })
+      } else {
+        res.status(401).json({ message: "Not authorized!" });
+      }
+    }).catch(error => {
+      console.log(error);
+      res.status(500).json({
+        message: "Deleting Event failed!"
       });
     });
   }

@@ -90,7 +90,7 @@ exports.createCourse = (req, res, next) => {
   })
   .catch(err => {
     res.status(500).json({
-      message: "Invalid authentication credentials!"
+      message: "Credenciales no válidos"
     });
   });
 }

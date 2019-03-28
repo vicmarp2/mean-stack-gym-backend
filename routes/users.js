@@ -1,4 +1,5 @@
 const express = require("express");
+const checkAuth = require("../middleware/check-auth");
 
 const UserController = require("../controllers/users");
 
@@ -18,11 +19,11 @@ router.get("", UserController.getUsers);
 
 router.get("/user/:userId", UserController.getUser);
 
-router.delete("/user/:userId", UserController.deleteUser);
+router.delete("/user/:userId", checkAuth, UserController.deleteUser);
 
 router.get("/users", UserController.listUsers);
 
-router.put("/edit", UserController.updateUser);
+router.put("/edit", checkAuth, UserController.updateUser);
 
 
 module.exports = router;
