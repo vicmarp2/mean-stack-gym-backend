@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 
 const User = require("../models/user");
 const Quota = require("../models/quota");
+const Reservation = require('../models/reservation.js');
 
 exports.getUser = (req, res, next) => {
   const userId = req.params.userId;
@@ -39,6 +40,7 @@ exports.deleteUser = (req, res, next) => {
   const deleteQuery = User.deleteOne({_id: userId});
   deleteQuery.then((result) => {
     if (result.n > 0) {
+      Reservation.deleteMany({user: userId}).exec();
       res.status(200).json({
         message: "User deleted successfully!",
       });

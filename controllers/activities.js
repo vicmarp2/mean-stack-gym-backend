@@ -131,6 +131,10 @@ exports.deleteActivity = (req, res, next) => {
   const deleteQuery = Activity.deleteOne({ _id: id });
   deleteQuery.then((result) => {
     if (result.n > 0) {
+      activity.events.forEach(event => {
+        console.log(event);
+        Reservation.deleteMany({event: event}).exec();
+      });
       Event.deleteMany({ activityName: activity.name }).then(result => {
         res.status(200).json({
           message: "Activity deleted successfully!",
@@ -141,7 +145,7 @@ exports.deleteActivity = (req, res, next) => {
     }
   }).catch(error => {
     res.status(500).json({
-      message: "Fetching Activity failed!"
+      message: "Deleting Activity failed!"
     });
   });
 }
@@ -246,6 +250,7 @@ exports.deleteEvent = (req, res, next) => {
   deleteQuery.then((result) => {
     if (result.n > 0) {
       console.log(event);
+      Reservation.deleteMany({event: id}).exec();
       Activity.findOneAndUpdate({ name: event.activityName }, { $pull: { events: event._id } }).then(result => {
         console.log(result);
         res.status(200).json({
@@ -259,6 +264,20 @@ exports.deleteEvent = (req, res, next) => {
     console.log(error);
     res.status(500).json({
       message: "Deleting Event failed!"
+    });
+  });
+}
+
+exports.getAllReservations = (req, res, next) => {
+  const getQuery = Reservation.find();
+  getQuery.then((reservations) => {
+    res.status(200).json({
+      message: "Reservations fetched successfully!",
+      reservations,
+    });
+  }).catch(error => {
+    res.status(500).json({
+      message: "Fetching reservations failed!"
     });
   });
 }

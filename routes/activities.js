@@ -21,6 +21,8 @@ router.put("/edit/event", checkAuth, ActivitiesController.updateEvent);
 
 router.delete("/event/:id", checkAuth, ActivitiesController.deleteEvent);
 
+router.get("/reservations", checkAuth, ActivitiesController.getAllReservations);
+
 router.get("/reservations/:userId", checkAuth, ActivitiesController.getReservationsByUser);
 
 router.post("/create/reservation", checkAuth, ActivitiesController.createReservation);
