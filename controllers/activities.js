@@ -68,6 +68,7 @@ const activities2 = [
 
 const Activity = require('../models/activity.js');
 const Event = require('../models/event.js');
+const Reservation = require('../models/reservation.js');
 
 exports.getActivities = (req, res, next) => {
   const getQuery = Activity.find();
@@ -97,107 +98,106 @@ exports.getAllEvents = (req, res, next) => {
   });
 }
 
-  // activities.forEach((activity) => {
-  //   const events = activity.events.map((event) => {
-  //     return new Event({
-  //       activityName: event.activityName,
-  //       startHour: event.startHour,
-  //       endHour: event.endHour,
-  //       dayOfWeek: event.dayOfWeek,
-  //     })
-  //   })
-  //   const act = new Activity({
-  //     name: activity.name,
-  //     description: activity.description,
-  //     imageUrl: activity.imageUrl,
-  //     events,
-  //   })
-  //   act.save().then((savedActivity) => {
-  //     console.log(savedActivity);
-  //   }).catch((error) => {
-  //     console.log(error);
-  //   })
-  // }) 
+// activities.forEach((activity) => {
+//   const events = activity.events.map((event) => {
+//     return new Event({
+//       activityName: event.activityName,
+//       startHour: event.startHour,
+//       endHour: event.endHour,
+//       dayOfWeek: event.dayOfWeek,
+//     })
+//   })
+//   const act = new Activity({
+//     name: activity.name,
+//     description: activity.description,
+//     imageUrl: activity.imageUrl,
+//     events,
+//   })
+//   act.save().then((savedActivity) => {
+//     console.log(savedActivity);
+//   }).catch((error) => {
+//     console.log(error);
+//   })
+// }) 
 
 
-  exports.deleteActivity = (req, res, next) => {
-    const id = req.params.id;
-    let activity;
-    Activity.findOne({ _id: id}).then(activityRes => {
-      activity = activityRes;
-      console.log(activity.name);
-    })
-    const deleteQuery = Activity.deleteOne({_id: id});
-    deleteQuery.then((result) => {
-      if (result.n > 0) {
-        Event.deleteMany({activityName: activity.name}).then(result => {
-          res.status(200).json({
-            message: "Activity deleted successfully!",
-          });
-        })
-      } else {
-        res.status(401).json({ message: "Not authorized!" });
-      }
-    }).catch(error => {
-      res.status(500).json({
-        message: "Fetching Activity failed!"
-      });
-    });
-  }
-  
-  exports.updateActivity = (req, res, next) => {
-    const newActivity = req.body.activity;
-    let oldActivity;
-    const activity = new Activity({
-      ...newActivity,
-      _id: newActivity.id,
-    })
-    Activity.findOne({ _id: newActivity.id}).then(activityRes => {
-      oldActivity = activityRes;
-    })
-    const putQuery = Activity.updateOne({_id: activity._id}, activity);
-    putQuery.then((result) => {
-      if (result.n > 0) {
-        Event.updateMany({activityName: oldActivity.name }, {$set: {activityName: newActivity.name}}).exec();
+exports.deleteActivity = (req, res, next) => {
+  const id = req.params.id;
+  let activity;
+  Activity.findOne({ _id: id }).then(activityRes => {
+    activity = activityRes;
+    console.log(activity.name);
+  })
+  const deleteQuery = Activity.deleteOne({ _id: id });
+  deleteQuery.then((result) => {
+    if (result.n > 0) {
+      Event.deleteMany({ activityName: activity.name }).then(result => {
         res.status(200).json({
-          message: "Activity updated successfully!",
+          message: "Activity deleted successfully!",
         });
-      } else {
-        res.status(401).json({ message: "Not authorized!" });
-      }
-    }).catch(error => {
-      res.status(500).json({
-        message: "Updating Activity failed!"
-      });
+      })
+    } else {
+      res.status(401).json({ message: "Not authorized!" });
+    }
+  }).catch(error => {
+    res.status(500).json({
+      message: "Fetching Activity failed!"
     });
-  }
-  
-  exports.createActivity = (req, res, next) => {
-  
-    const activity = new Activity({
-      ...req.body.activity
-    });
-    activity.save().then(result => {
-      res.status(201).json({
-        message: "Activity created!",
-        activity: result
+  });
+}
+
+exports.updateActivity = (req, res, next) => {
+  const newActivity = req.body.activity;
+  let oldActivity;
+  const activity = new Activity({
+    ...newActivity,
+    _id: newActivity.id,
+  })
+  Activity.findOne({ _id: newActivity.id }).then(activityRes => {
+    oldActivity = activityRes;
+  })
+  const putQuery = Activity.updateOne({ _id: activity._id }, activity);
+  putQuery.then((result) => {
+    if (result.n > 0) {
+      Event.updateMany({ activityName: oldActivity.name }, { $set: { activityName: newActivity.name } }).exec();
+      res.status(200).json({
+        message: "Activity updated successfully!",
       });
-    })
+    } else {
+      res.status(401).json({ message: "Not authorized!" });
+    }
+  }).catch(error => {
+    res.status(500).json({
+      message: "Updating Activity failed!"
+    });
+  });
+}
+
+exports.createActivity = (req, res, next) => {
+
+  const activity = new Activity({
+    ...req.body.activity
+  });
+  activity.save().then(result => {
+    res.status(201).json({
+      message: "Activity created!",
+      activity: result
+    });
+  })
     .catch(err => {
       res.status(500).json({
         message: "Credenciales no válidos"
       });
     });
-  }
+}
 
-//todo
-  exports.createEvent = (req, res, next) => {
-  
-    const event = new Event({
-      ...req.body.event
-    });
-    event.save().then(result => {
-      Activity.findOneAndUpdate({name: event.activityName}, {$push: {events: event}}).then(result => {
+exports.createEvent = (req, res, next) => {
+
+  const event = new Event({
+    ...req.body.event
+  });
+  event.save().then(result => {
+    Activity.findOneAndUpdate({ name: event.activityName }, { $push: { events: event } }).then(result => {
       res.status(201).json({
         message: "Event created!",
         event: result
@@ -210,55 +210,108 @@ exports.getAllEvents = (req, res, next) => {
         message: "Credenciales no válidos"
       });
     });
-  }
+}
 
-  exports.updateEvent = (req, res, next) => {
-    const newEvent = req.body.event;
-    const event = new Event({
-      ...newEvent,
-      _id: newEvent.id,
-    })
-    const putQuery = Event.updateOne({_id: event._id}, event);
-    putQuery.then((result) => {
-      if (result.n > 0) {
-        res.status(200).json({
-          message: "Event updated successfully!",
-        });
-      } else {
-        res.status(401).json({ message: "Not authorized!" });
-      }
-    }).catch(error => {
-      res.status(500).json({
-        message: "Updating Event failed!"
+exports.updateEvent = (req, res, next) => {
+  const newEvent = req.body.event;
+  const event = new Event({
+    ...newEvent,
+    _id: newEvent.id,
+  })
+  const putQuery = Event.updateOne({ _id: event._id }, event);
+  putQuery.then((result) => {
+    if (result.n > 0) {
+      res.status(200).json({
+        message: "Event updated successfully!",
       });
+    } else {
+      res.status(401).json({ message: "Not authorized!" });
+    }
+  }).catch(error => {
+    res.status(500).json({
+      message: "Updating Event failed!"
     });
-  }
+  });
+}
 
 
-  exports.deleteEvent = (req, res, next) => {
-    const id = req.params.id;
-    let event;
-    Event.findOne({ _id: id}).then(eventRes => {
-      event = eventRes;
-      console.log(event._id);
-    })
-    const deleteQuery = Event.deleteOne({_id: id});
-    deleteQuery.then((result) => {
-      if (result.n > 0) {
-        console.log(event);
-        Activity.findOneAndUpdate({name: event.activityName}, {$pull: {events: event._id}}).then(result => {
-          console.log(result);
+exports.deleteEvent = (req, res, next) => {
+  const id = req.params.id;
+  let event;
+  Event.findOne({ _id: id }).then(eventRes => {
+    event = eventRes;
+    console.log(event._id);
+  })
+  const deleteQuery = Event.deleteOne({ _id: id });
+  deleteQuery.then((result) => {
+    if (result.n > 0) {
+      console.log(event);
+      Activity.findOneAndUpdate({ name: event.activityName }, { $pull: { events: event._id } }).then(result => {
+        console.log(result);
         res.status(200).json({
           message: "Event deleted successfully!",
         });
       })
-      } else {
-        res.status(401).json({ message: "Not authorized!" });
-      }
-    }).catch(error => {
-      console.log(error);
+    } else {
+      res.status(401).json({ message: "Not authorized!" });
+    }
+  }).catch(error => {
+    console.log(error);
+    res.status(500).json({
+      message: "Deleting Event failed!"
+    });
+  });
+}
+
+exports.getReservationsByUser = (req, res, next) => {
+  const userId = req.params.userId;
+  const getQuery = Reservation.find({ user: userId });
+  getQuery.then((reservations) => {
+    res.status(200).json({
+      message: "Reservations fetched successfully!",
+      reservations,
+    });
+  }).catch(error => {
+    res.status(500).json({
+      message: "Fetching reservations failed!"
+    });
+  });
+}
+
+exports.deleteReservation = (req, res, next) => {
+  const id = req.params.id;
+  const deleteQuery = Reservation.deleteOne({ _id: id });
+  deleteQuery.then((result) => {
+    if (result.n > 0) {
+      res.status(200).json({
+        message: "Reservation deleted successfully!",
+      });
+    } else {
+      res.status(401).json({ message: "Not authorized!" });
+    }
+  }).catch(error => {
+    console.log(error);
+    res.status(500).json({
+      message: "Deleting Reservation failed!"
+    });
+  });
+}
+
+exports.createReservation = (req, res, next) => {
+
+  const reservation = new Reservation({
+    ...req.body.reservation
+  });
+  reservation.save().then(result => {
+      res.status(201).json({
+        message: "Reservation created!",
+        reservation: result
+      });
+  })
+    .catch(err => {
+      console.log(err);
       res.status(500).json({
-        message: "Deleting Event failed!"
+        message: "Credenciales no válidos"
       });
     });
-  }
+}

@@ -6,7 +6,6 @@ const User = require("../models/user");
 const Quota = require("../models/quota");
 
 exports.getUser = (req, res, next) => {
-  console.log("here", req.params.userId);
   const userId = req.params.userId;
   const getQuery = User.findOne({_id: userId}).populate('quota');
   getQuery.then((user) => {

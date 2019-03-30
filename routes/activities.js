@@ -21,4 +21,10 @@ router.put("/edit/event", checkAuth, ActivitiesController.updateEvent);
 
 router.delete("/event/:id", checkAuth, ActivitiesController.deleteEvent);
 
+router.get("/reservations/:userId", checkAuth, ActivitiesController.getReservationsByUser);
+
+router.post("/create/reservation", checkAuth, ActivitiesController.createReservation);
+
+router.delete("/reservation/:id", checkAuth, ActivitiesController.deleteReservation);
+
 module.exports = router;
