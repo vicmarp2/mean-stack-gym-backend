@@ -190,7 +190,9 @@ exports.createFreeUser = (req, res, next) => {
       quota: userQuotaId,
       purchaseDate: req.body.purchaseDate,
       endDate: req.body.endDate,
+      isAdmin: req.body.isAdmin
     });
+    console.log(user);
     user
       .save()
       .then(result => {
