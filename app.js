@@ -8,6 +8,9 @@ const gymRoutes = require("./routes/gyms");
 const activityRoutes = require("./routes/activities");
 const courseRoutes = require("./routes/courses");
 const quotaRoutes = require("./routes/quotas");
+const restUserRoutes = require("./rest/routes/users");
+const restActivityRoutes = require("./rest/routes/activities");
+const restAuthRoutes = require("./rest/routes/auth");
 
 const app = express();
 
@@ -39,10 +42,15 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/api/users", userRoutes);
-app.use("/api/gyms", gymRoutes);
-app.use("/api/activities", activityRoutes);
-app.use("/api/courses", courseRoutes);
-app.use("/api/quotas", quotaRoutes);
+app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/gyms", gymRoutes);
+app.use("/api/v1/activities", activityRoutes);
+app.use("/api/v1/courses", courseRoutes);
+app.use("/api/v1/quotas", quotaRoutes);
+
+
+app.use("/api/v1/rest/users", restUserRoutes);
+app.use("/api/v1/rest/activities", restActivityRoutes);
+app.use("/api/v1/rest/auth", restAuthRoutes);
 
 module.exports = app;
