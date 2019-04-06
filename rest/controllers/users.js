@@ -14,7 +14,7 @@ exports.getUser = (req, res, next) => {
       user,
     });
   }).catch(error => {
-    res.status(500).json({
+    res.status(404).json({
       message: "Fetching user failed!"
     });
   });
@@ -24,11 +24,11 @@ exports.getUsers = (req, res, next) => {
   const getQuery = User.find().populate('quota');
   getQuery.then((users) => {
     res.status(200).json({
-      message: "User fetched successfully!",
+      message: "Users fetched successfully!",
       users,
     });
   }).catch(error => {
-    res.status(500).json({
+    res.status(404).json({
       message: "Fetching users failed!"
     });
   });
@@ -52,7 +52,7 @@ exports.getUserAccess = (req, res, next) => {
       access
     });
   }).catch(error => {
-    res.status(500).json({
+    res.status(404).json({
       message: "Fetching users failed!"
     });
   });
@@ -91,7 +91,7 @@ exports.getUserAccessToEvent = (req, res, next) => {
       })
     })
   }).catch(error => {
-    res.status(500).json({
+    res.status(404).json({
       message: "Fetching user failed!"
     });
   });

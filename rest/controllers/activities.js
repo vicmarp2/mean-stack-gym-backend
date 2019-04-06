@@ -11,7 +11,7 @@ exports.getActivities = (req, res, next) => {
       activities,
     });
   }).catch(error => {
-    res.status(500).json({
+    res.status(404).json({
       message: "Fetching activities failed!"
     });
   });
@@ -26,7 +26,7 @@ exports.getActivities = (req, res, next) => {
         activities,
       });
     }).catch(error => {
-      res.status(500).json({
+      res.status(404).json({
         message: "Fetching activity failed!"
       });
     });
@@ -41,7 +41,7 @@ exports.getActivities = (req, res, next) => {
         reservations,
       });
     }).catch(error => {
-      res.status(500).json({
+      res.status(404).json({
         message: "Fetching reservation failed!"
       });
     });
@@ -57,7 +57,7 @@ exports.getActivities = (req, res, next) => {
         reservations,
       });
     }).catch(error => {
-      res.status(500).json({
+      res.status(404).json({
         message: "Fetching reservation failed!"
       });
     });

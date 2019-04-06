@@ -38,7 +38,7 @@ exports.getToken = (req, res, next) => {
     })
     .catch(err => {
       return res.status(401).json({
-        message: "Credenciales no válidos"
+        message: "Auth failed"
       });
     });
 }
